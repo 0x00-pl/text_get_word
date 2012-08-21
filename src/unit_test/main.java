@@ -28,10 +28,22 @@ public class main {
     Collections.sort(txt_iter_set, new text_iterator.cmp());
     
     get_word_range range_stream= new get_word_range(txt_iter_set);
+    range_stream.word_len=4;
+    
     while(!range_stream.empty()){
       word_range dbg= range_stream.get_next_range();
-      if(dbg.get_sum_text()>1000 && dbg.get_variance_rate().getKey()<0.1 && dbg.get_variance_rate().getValue()<0.1)
-        System.out.println(dbg.get_text()+"["+dbg.get_sum_text()+"] ["+dbg.get_variance_rate()+"]");
+      if(dbg.get_sum_text()< (txt_iter_set.size()*0.0003)) continue;
+      if(dbg.get_variance_rate().getKey()> 0.3) continue;
+      if(dbg.get_variance_rate().getValue()> 0.3) continue;
+      //float core_rate= (dbg.get_sum_text()*2.0f)/(range_stream.sum_str(dbg.get_text().substring(0,1))+range_stream.sum_str(dbg.get_text().substring(1,2)));
+      double p_rand= 1.0f* range_stream.sum_str(dbg.get_text().substring(1,2))/txt_iter_set.size() *
+          range_stream.sum_str(dbg.get_text().substring(0,1))/txt_iter_set.size();
+      double core_rate= 1.0*dbg.get_sum_text()/txt_iter_set.size() / p_rand;
+      if(core_rate< 20) continue;
+      System.out.println(dbg.get_text()+
+            "["+dbg.get_sum_text()+": "+
+           +core_rate+
+        "] ["+dbg.get_variance_rate()+"]");
     }
   }
   
@@ -42,9 +54,12 @@ public class main {
     // TODO Auto-generated method stub
     String s_file=null;
     try {
-      FileInputStream fin= new FileInputStream("E:\\myhome\\res\\law_doc\\案例库_中国法院网.txt");
-      //byte[] buff= new byte[(int) new File("E:\\myhome\\res\\law_doc\\33k.txt").length()]; 
-      byte[] buff= new byte[3000000]; 
+      String filename= "E:\\myhome\\res\\law_doc\\案例库_中国法院网.txt";
+//      String filename= "E:\\myhome\\res\\cmfu_doc\\1689081.txt";
+      
+      FileInputStream fin= new FileInputStream(filename);
+      //byte[] buff= new byte[(int) new File(filename).length()]; 
+      byte[] buff= new byte[10000000]; 
       fin.read(buff);
       s_file= new String(buff, Charset.forName("utf8"));
     } catch (FileNotFoundException e) {
