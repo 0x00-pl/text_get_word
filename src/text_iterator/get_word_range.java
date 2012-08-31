@@ -1,5 +1,6 @@
 package text_iterator;
 
+import java.io.CharConversionException;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,36 +41,39 @@ public class get_word_range {
     }
     
     public Map.Entry<Float,Float> get_variance_rate() {
-      float sqsum_l = 0;
-      char last_l = '~';
-      int lastn_l = 0;
-      
       float sqsum_r = 0;
       char last_r = '~';
       int lastn_r = 0;
       
+      float sqsum_l = 0;
+      char last_l = '~';
+      int lastn_l = 0;
+      ArrayList<Character> lchar= new ArrayList<Character>();
+      
       for (int i = text_iterator_beg; i < text_iterator_end; i++) {
         text_iterator cur = sorted_list.get(i);
-        // l
-        {
-          if (last_l == cur.s.charAt(cur.pos + world_len)) {
-            lastn_l++;
-          } else {
-            sqsum_l += lastn_l * lastn_l;
-            last_l = cur.s.charAt(cur.pos + world_len);
-            lastn_l = 1;
-          }
+        // r
+        if (last_r == cur.s.charAt(cur.pos + world_len)) {
+          lastn_r++;
+        } else {
+          sqsum_r += lastn_r * lastn_r;
+          last_r = cur.s.charAt(cur.pos + world_len);
+          lastn_r = 1;
         }
         
-        // r
-        {
-          if (last_r == cur.s.charAt(cur.pos - 1)) {
-            lastn_r++;
-          } else {
-            sqsum_r += lastn_r * lastn_r;
-            last_r = cur.s.charAt(cur.pos - 1);
-            lastn_r = 1;
-          }
+        // l
+        lchar.add(cur.s.charAt(cur.pos - 1));
+
+      }
+      //sort l 
+      Collections.sort(lchar);
+      for(int i=0; i<lchar.size(); i++){
+        if (last_l == lchar.get(i)) {
+          lastn_l++;
+        } else {
+          sqsum_l += lastn_l * lastn_l;
+          last_l = lchar.get(i);
+          lastn_l = 1;
         }
       }
       sqsum_l += lastn_l * lastn_l;

@@ -28,7 +28,7 @@ public class main {
     Collections.sort(txt_iter_set, new text_iterator.cmp());
     
     get_word_range range_stream= new get_word_range(txt_iter_set);
-    range_stream.word_len=4;
+//    range_stream.word_len=4;
     
     while(!range_stream.empty()){
       word_range dbg= range_stream.get_next_range();
@@ -54,12 +54,12 @@ public class main {
     // TODO Auto-generated method stub
     String s_file=null;
     try {
-      String filename= "E:\\myhome\\res\\law_doc\\案例库_中国法院网.txt";
+      String filename= "E:\\myhome\\res\\weibo\\result\\weibo_at_ 2012-08-28.1346126146.264.txt";
 //      String filename= "E:\\myhome\\res\\cmfu_doc\\1689081.txt";
       
       FileInputStream fin= new FileInputStream(filename);
       //byte[] buff= new byte[(int) new File(filename).length()]; 
-      byte[] buff= new byte[10000000]; 
+      byte[] buff= new byte[100000]; 
       fin.read(buff);
       s_file= new String(buff, Charset.forName("utf8"));
     } catch (FileNotFoundException e) {
