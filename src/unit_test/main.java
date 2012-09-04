@@ -11,6 +11,9 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import sort_text.Tsort_text;
 import text_iterator.get_word_range;
@@ -19,7 +22,8 @@ import text_iterator.text_iterator;
 
 public class main {
   
-  static void f(String text){
+
+  static ArrayList<Map<String,String>> f(String text){
     ArrayList<text_iterator> txt_iter_set = new ArrayList<>();
     for(int i=1; i<text.length()-3; i++){
       txt_iter_set.add(new text_iterator(text, i));
@@ -30,6 +34,7 @@ public class main {
     get_word_range range_stream= new get_word_range(txt_iter_set);
 //    range_stream.word_len=4;
     
+    ArrayList<Map<String,String>> ret= new ArrayList<Map<String,String>>();
     while(!range_stream.empty()){
       word_range dbg= range_stream.get_next_range();
       if(dbg.get_sum_text()< (txt_iter_set.size()*0.0003)) continue;
@@ -40,10 +45,40 @@ public class main {
           range_stream.sum_str(dbg.get_text().substring(0,1))/txt_iter_set.size();
       double core_rate= 1.0*dbg.get_sum_text()/txt_iter_set.size() / p_rand;
       if(core_rate< 20) continue;
-      System.out.println(dbg.get_text()+
-            "["+dbg.get_sum_text()+": "+
-           +core_rate+
-        "] ["+dbg.get_variance_rate()+"]");
+      {
+        // System.out.println(dbg.get_text()+
+        // "["+dbg.get_sum_text()+": "+
+        // +core_rate+
+        // "] ["+dbg.get_variance_rate()+"]");
+        Map<String,String> temp = new HashMap<String,String>();
+        temp.put("name", dbg.get_text());
+        temp.put("sum", "" + dbg.get_sum_text());
+        Entry<Float,Float> v = dbg.get_variance_rate();
+        temp.put("l_cariance", v.getKey().toString());
+        temp.put("r_cariance", v.getValue().toString());
+        ret.add(temp);
+      }
+    }
+    return ret;
+  }
+  
+  
+  static void show_result(ArrayList<Map<String,String>> data){
+    Collections.sort(data, new Comparator<Map<String,String>>() {
+      @Override
+      public int compare(Map<String,String> o1, Map<String,String> o2) {
+        return o2.get("sum").compareTo(o1.get("sum"));
+      }
+    });
+
+    for(int i=0; i<data.size(); i++){
+//      System.out.println(data.get(i));
+      Map<String,String> iter= data.get(i);
+      System.out.print(iter.get("name")+",");
+      System.out.print(iter.get("sum")+",");
+      System.out.print(iter.get("l_cariance")+",");
+      System.out.println(iter.get("r_cariance"));
+      
     }
   }
   
@@ -54,7 +89,8 @@ public class main {
     // TODO Auto-generated method stub
     String s_file=null;
     try {
-      String filename= "E:\\myhome\\res\\weibo\\result\\weibo_at_ 2012-08-28.1346126146.264.txt";
+      //result\\weibo_at_ 2012-08-28.1346126146.264.txt
+      String filename= "E:\\myhome\\res\\weibo\\weibo120min.txt";
 //      String filename= "E:\\myhome\\res\\cmfu_doc\\1689081.txt";
       
       FileInputStream fin= new FileInputStream(filename);
@@ -70,7 +106,8 @@ public class main {
       e.printStackTrace();
     }
     //f("^³ÔÆÏÌÑ²»ÍÂÆÏÌÑÆ¤²»³ÔÆÏÌÑµ½ÍÂÆÏÌÑÆ¤$");
-    f(s_file);
+    ArrayList<Map<String,String>> result= f(s_file);
+    show_result(result);
     
     if (false) {
       String str1 = "³ÔÆÏÌÑ²»ÍÂÆÏÌÑÆ¤1234567890";
