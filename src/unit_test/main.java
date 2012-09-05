@@ -87,7 +87,8 @@ public class main {
     String s_file=null;
     try {
       FileInputStream fin= new FileInputStream(filename);
-      byte[] buff= new byte[(int) Math.min(new File(filename).length(), 1e6)]; 
+      long file_len= new File(filename).length();
+      byte[] buff= new byte[(int) Math.min(file_len, 1e7)]; 
       fin.read(buff);
       s_file= new String(buff, Charset.forName("utf8"));
     } catch (FileNotFoundException e) {
