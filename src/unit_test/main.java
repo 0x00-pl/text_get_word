@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import result_diff.result_diff;
 import sort_text.Tsort_text;
 import text_iterator.get_word_range;
 import text_iterator.get_word_range.word_range;
@@ -105,8 +106,12 @@ public class main {
    */
   public static void main(String[] args) {
 
-    ArrayList<Map<String,String>> result= f_file("E:\\myhome\\res\\weibo\\result\\weibo_at_ 2012-08-28.1346126146.264.txt");
-    show_result(result);
+    ArrayList<Map<String,String>> result1= f_file("E:\\myhome\\res\\weibo\\result\\weibo_at_ 2012-08-28.1346126146.264.txt");
+    ArrayList<Map<String,String>> result2= f_file("E:\\myhome\\res\\weibo\\result\\weibo_at_ 2012-09-03.1346636609.317.txt");
+    result_diff diff= new result_diff(result1, result2);
+    Map<String,Number> diffmsg= diff.get_diff();
+    System.out.println(diffmsg);
+    //show_result(result1);
   }
 
 }
