@@ -20,7 +20,7 @@ public class result_diff {
   
   Map<String,Number> get_map(ArrayList<Map<String,String>> obj){
     Map<String,Number> ret= new HashMap<>();
-    for(ListIterator<Map<String,String>> i=a.listIterator(); i.hasNext();){
+    for(ListIterator<Map<String,String>> i=obj.listIterator(); i.hasNext();){
       Map<String,String> ety= i.next();
       String k= ety.get("name");
       Number v= Integer.parseInt(ety.get("sum"));
@@ -44,7 +44,8 @@ public class result_diff {
       if(mapa.containsKey(k)) na= mapa.get(k).intValue();
       if(mapb.containsKey(k)) nb= mapb.get(k).intValue();
       
-      ret.put(k, Math.abs(na-nb));
+      ret.put(k, nb-na);
+      //ret.put(k, Math.abs(na-nb));
     }
     
     return ret;

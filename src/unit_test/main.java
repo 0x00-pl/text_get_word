@@ -87,7 +87,7 @@ public class main {
     String s_file=null;
     try {
       FileInputStream fin= new FileInputStream(filename);
-      byte[] buff= new byte[(int) Math.min(new File(filename).length(), 1e7)]; 
+      byte[] buff= new byte[(int) Math.min(new File(filename).length(), 1e6)]; 
       fin.read(buff);
       s_file= new String(buff, Charset.forName("utf8"));
     } catch (FileNotFoundException e) {
@@ -112,6 +112,8 @@ public class main {
     Map<String,Number> diffmsg= diff.get_diff();
     System.out.println(diffmsg);
     //show_result(result1);
+    int i=0;
+    int j=i;
   }
 
 }
