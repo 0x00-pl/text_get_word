@@ -82,20 +82,11 @@ public class main {
     }
   }
   
-  /**
-   * @param args
-   */
-  public static void main(String[] args) {
-    // TODO Auto-generated method stub
+  public static ArrayList<Map<String,String>> f_file(String filename){
     String s_file=null;
     try {
-      //result\\weibo_at_ 2012-08-28.1346126146.264.txt
-      String filename= "E:\\myhome\\res\\weibo\\weibo120min.txt";
-//      String filename= "E:\\myhome\\res\\cmfu_doc\\1689081.txt";
-      
       FileInputStream fin= new FileInputStream(filename);
-      //byte[] buff= new byte[(int) new File(filename).length()]; 
-      byte[] buff= new byte[100000]; 
+      byte[] buff= new byte[(int) Math.min(new File(filename).length(), 5e6)]; 
       fin.read(buff);
       s_file= new String(buff, Charset.forName("utf8"));
     } catch (FileNotFoundException e) {
@@ -106,20 +97,16 @@ public class main {
       e.printStackTrace();
     }
     //f("^³ÔÆÏÌÑ²»ÍÂÆÏÌÑÆ¤²»³ÔÆÏÌÑµ½ÍÂÆÏÌÑÆ¤$");
-    ArrayList<Map<String,String>> result= f(s_file);
+    return f(s_file);
+  }
+  
+  /**
+   * @param args
+   */
+  public static void main(String[] args) {
+
+    ArrayList<Map<String,String>> result= f_file("E:\\myhome\\res\\weibo\\result\\weibo_at_ 2012-08-28.1346126146.264.txt");
     show_result(result);
-    
-    if (false) {
-      String str1 = "³ÔÆÏÌÑ²»ÍÂÆÏÌÑÆ¤1234567890";
-      String str2 = "chiputaobutuputaopi123456";
-      
-      ArrayList<String> temp1 = Tsort_text.sort_text(str1, 10);
-      ArrayList<String> temp2 = Tget_word.get_word(temp1, 1);
-      
-      for (int i = 0; i < temp2.size(); i++) {
-        System.out.println(temp2.get(i));
-      }
-    }
   }
 
 }
