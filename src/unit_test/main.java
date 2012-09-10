@@ -33,19 +33,19 @@ public class main {
     Collections.sort(txt_iter_set, new text_iterator.cmp());
     
     get_word_range range_stream= new get_word_range(txt_iter_set);
-//    range_stream.word_len=4;
+    range_stream.word_len=2;
     
     ArrayList<Map<String,String>> ret= new ArrayList<Map<String,String>>();
     while(!range_stream.empty()){
       word_range dbg= range_stream.get_next_range();
-      if(dbg.get_sum_text()< (txt_iter_set.size()*0.0003)) continue;
-      if(dbg.get_variance_rate().getKey()> 0.3) continue;
-      if(dbg.get_variance_rate().getValue()> 0.3) continue;
+      if(dbg.get_sum_text()< (txt_iter_set.size()*0.0005)) continue;
+      if(dbg.get_variance_rate().getKey()> 0.7) continue;
+      if(dbg.get_variance_rate().getValue()> 0.7) continue;
       //float core_rate= (dbg.get_sum_text()*2.0f)/(range_stream.sum_str(dbg.get_text().substring(0,1))+range_stream.sum_str(dbg.get_text().substring(1,2)));
       double p_rand= 1.0f* range_stream.sum_str(dbg.get_text().substring(1,2))/txt_iter_set.size() *
           range_stream.sum_str(dbg.get_text().substring(0,1))/txt_iter_set.size();
       double core_rate= 1.0*dbg.get_sum_text()/txt_iter_set.size() / p_rand;
-      if(core_rate< 20) continue;
+      if(core_rate< 7) continue;
       {
         // System.out.println(dbg.get_text()+
         // "["+dbg.get_sum_text()+": "+
@@ -58,6 +58,7 @@ public class main {
         temp.put("l_cariance", v.getKey().toString());
         temp.put("r_cariance", v.getValue().toString());
         ret.add(temp);
+        System.out.println(temp+"core_rate="+core_rate);
       }
     }
     return ret;
@@ -88,7 +89,7 @@ public class main {
     try {
       FileInputStream fin= new FileInputStream(filename);
       long file_len= new File(filename).length();
-      byte[] buff= new byte[(int) Math.min(file_len, 1e7)]; 
+      byte[] buff= new byte[(int) Math.min(file_len, 1e8)]; 
       fin.read(buff);
       s_file= new String(buff, Charset.forName("utf8"));
     } catch (FileNotFoundException e) {
@@ -110,8 +111,10 @@ public class main {
     ArrayList<Map<String,String>> result1= f_file("E:\\myhome\\res\\weibo\\result\\weibo_at_ 2012-08-28.1346126146.264.txt");
     ArrayList<Map<String,String>> result2= f_file("E:\\myhome\\res\\weibo\\result\\weibo_at_ 2012-09-03.1346636609.317.txt");
     result_diff diff= new result_diff(result1, result2);
-    Map<String,Number> diffmsg= diff.get_diff();
-    System.out.println(diffmsg);
+    Object diffmsg= diff.get_diff();
+    convert_python.from_map tmp = null;
+    String diffmsg_py_fmt= tmp.format_kv((Map<Object,Object>)diffmsg);
+    System.out.println(diffmsg_py_fmt);
     //show_result(result1);
     int i=0;
     int j=i;
