@@ -13,6 +13,19 @@ public class text_iterator
     this.pos = pos;
   }
   
+  public String toString(){
+    return s.substring(pos);
+  }
+  
+  public String get_line(){
+    int beg= pos;
+    while(beg>0 && s.charAt(beg)!='\n') 
+      beg--;
+    beg++;
+    String temp= s.substring(beg);
+    return temp.substring(0, temp.indexOf('\n'));
+  }
+  
   public static class cmp implements Comparator<text_iterator> {
     @Override
     public int compare(text_iterator o1, text_iterator o2) {

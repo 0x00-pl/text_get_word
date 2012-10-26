@@ -4,6 +4,7 @@ import java.io.CharConversionException;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Map;
 
 import text_iterator.text_iterator.start_with_str;
@@ -16,6 +17,84 @@ public class get_word_range {
   public get_word_range(ArrayList<text_iterator> sorted_list) {
     this.sorted_list = sorted_list;
   }
+  
+  int get_first_unmatch(String cmp_obj) {
+    for (int i = index; i < sorted_list.size(); i++) {
+      text_iterator iter = sorted_list.get(i);
+      if (!iter.s.startsWith(cmp_obj, iter.pos)) {
+        return i;
+      }
+    }
+    return sorted_list.size();
+  }
+  
+  public word_range get_next_range() {
+    word_range ret = new word_range(sorted_list);
+    ret.text_iterator_beg = index;
+    
+    while (index < sorted_list.size()) {
+      // unitl
+      String cur_word = ret.beg().s.substring(ret.beg().pos,
+          Math.min(ret.beg().s.length(), ret.beg().pos + word_len));
+      int range_end = get_first_unmatch(cur_word);
+      // useless
+      // if (!(range_end < sorted_list.size()))
+      // return null;
+      index = range_end;
+      ret.text_iterator_end = range_end;
+      ret.world_len = word_len;
+      return ret;
+    }
+    return null;
+  }
+  
+  public boolean empty() {
+    return !(index < sorted_list.size());
+  }
+  
+  public int sum_str(String val) {
+    start_with_str cmp= new start_with_str(val);
+    int beg= sorted_list.indexOf(cmp);
+    int end= sorted_list.lastIndexOf(cmp);
+    return end-beg;
+    // return Collections.binarySearch(sorted_list, new text_iterator("123",3),
+    // new text_iterator.start_with());
+  }
+
+  public word_range get(String val){
+    word_range ret= new word_range(sorted_list);
+    
+    text_iterator tmp= new text_iterator(val, 0);
+    int find_res= Collections.binarySearch(sorted_list, tmp, new Comparator<text_iterator>(){
+      @Override
+      public int compare(text_iterator o1, text_iterator o2) {
+        return o1.s.substring(o1.pos).startsWith(o2.s)?
+              0:
+              o1.s.substring(o1.pos).compareTo(o2.s);
+      }});
+    if(find_res<0){
+      ret.text_iterator_beg= 0;
+      ret.text_iterator_end= 0;
+    }else{
+      int lbound= find_res;
+      while(lbound>=0){
+        if(!sorted_list.get(lbound).toString().startsWith(val)) break;
+        lbound--;
+      }
+      ret.text_iterator_beg= lbound;
+      
+      int rbound= find_res;
+      while(rbound<sorted_list.size()){
+        if(!sorted_list.get(lbound).toString().startsWith(val)) break;
+        rbound++;
+      }
+      ret.text_iterator_end= rbound+1;
+    }
+    return ret;
+  }
+
+
+  
   
   public static class word_range {
     public int world_len = Integer.MIN_VALUE;
@@ -90,47 +169,5 @@ public class get_word_range {
       return text_iterator_end - text_iterator_beg;
     }
   }
-  
-  int get_first_unmatch(String cmp_obj) {
-    for (int i = index; i < sorted_list.size(); i++) {
-      text_iterator iter = sorted_list.get(i);
-      if (!iter.s.startsWith(cmp_obj, iter.pos)) {
-        return i;
-      }
-    }
-    return sorted_list.size();
-  }
-  
-  public word_range get_next_range() {
-    word_range ret = new word_range(sorted_list);
-    ret.text_iterator_beg = index;
-    
-    while (index < sorted_list.size()) {
-      // unitl
-      String cur_word = ret.beg().s.substring(ret.beg().pos,
-          Math.min(ret.beg().s.length(), ret.beg().pos + word_len));
-      int range_end = get_first_unmatch(cur_word);
-      // useless
-      // if (!(range_end < sorted_list.size()))
-      // return null;
-      index = range_end;
-      ret.text_iterator_end = range_end;
-      ret.world_len = word_len;
-      return ret;
-    }
-    return null;
-  }
-  
-  public boolean empty() {
-    return !(index < sorted_list.size());
-  }
-  
-  public int sum_str(String val) {
-    start_with_str cmp= new start_with_str(val);
-    int beg= sorted_list.indexOf(cmp);
-    int end= sorted_list.lastIndexOf(cmp);
-    return end-beg;
-    // return Collections.binarySearch(sorted_list, new text_iterator("123",3),
-    // new text_iterator.start_with());
-  }
+
 }
